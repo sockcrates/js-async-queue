@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "types": ["node"]
+  },
+  "extends": "@vercel/style-guide/typescript/node20",
+  "include": ["src/**/*.ts"]
+}
