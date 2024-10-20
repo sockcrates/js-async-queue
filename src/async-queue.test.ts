@@ -22,7 +22,7 @@ describe('asyncQueue', () => {
       expect(callback).toHaveBeenCalledWith(1);
     });
   });
-  it.skip('does not exceed the concurrency limit', async () => {
+  it('does not exceed the concurrency limit', async () => {
     const queue = new AsyncQueue(3);
     let runningTasks = 0;
     let maxConcurrent = 0;

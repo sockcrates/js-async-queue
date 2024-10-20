@@ -21,8 +21,38 @@ export class AsyncQueue {
     options: Options = {},
   ): Promise<void> {
     const { callback } = options;
-    return task().then((result) => {
-      callback?.(result);
-    });
+    if (this.#workers) {
+      this.#workers -= 1;
+      return task()
+        .then((result) => {
+          callback?.(result);
+        })
+        .finally(() => {
+          this.#workers += 1;
+        });
+    }
+    this.#queue.push({ options, task });
+    return this.#processQueue();
+  }
+  #processQueue(): Promise<void> {
+    if (this.#workers) {
+      const nextRequest = this.#queue.shift();
+      if (nextRequest) {
+        this.#workers -= 1;
+        return nextRequest
+          .task()
+          .then((result) => {
+            nextRequest.options?.callback?.(result);
+          })
+          .finally(() => {
+            this.#workers += 1;
+          })
+          .then(() => {
+            if (this.#processQueue.length) {
+              return this.#processQueue();
+            }
+          });
+      }
+    }
   }
 }
