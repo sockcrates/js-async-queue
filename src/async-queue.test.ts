@@ -58,7 +58,7 @@ describe('asyncQueue', () => {
       ]);
     });
   });
-  it.skip('handles task rejection and continues processing others', () => {
+  it('handles task rejection and continues processing others', () => {
     const callback = vi.fn();
     const callbackError = vi.fn();
     const queue = new AsyncQueue(3);

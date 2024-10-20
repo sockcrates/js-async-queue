@@ -20,7 +20,7 @@ export class AsyncQueue {
     task: TaskFactory<TData>,
     options: Options = {},
   ): Promise<void> {
-    const { callback } = options;
+    const { callback, callbackError } = options;
     return new Promise((resolve) => {
       if (this.#workers) {
         this.#workers -= 1;
@@ -28,6 +28,9 @@ export class AsyncQueue {
           task()
             .then((result) => {
               callback?.(result);
+            })
+            .catch((error: unknown) => {
+              callbackError?.(error);
             })
             .finally(() => {
               this.#workers += 1;
@@ -47,6 +50,9 @@ export class AsyncQueue {
           .task()
           .then((result) => {
             nextRequest.options?.callback?.(result);
+          })
+          .catch((error: unknown) => {
+            nextRequest.options?.callbackError?.(error);
           })
           .finally(() => {
             this.#workers += 1;
