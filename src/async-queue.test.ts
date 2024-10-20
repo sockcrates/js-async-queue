@@ -31,7 +31,7 @@ describe('an asynchronous task queue in JavaScript', () => {
     );
     expect(maxConcurrent).toEqual(3);
   });
-  it.skip('executes tasks in the order they were added', async () => {
+  it('executes tasks in the order they were added', async () => {
     const queue = new AsyncQueue(3);
     const tasks = Array.from(
       { length: 5 },
