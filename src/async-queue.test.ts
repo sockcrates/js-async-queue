@@ -45,7 +45,7 @@ describe('an asynchronous task queue in JavaScript', () => {
     const results = await Promise.all(tasks.map(queue.enqueue));
     expect(results).toEqual([1, 2, 3, 4, 5]);
   });
-  it.skip('handles task rejection and continues processing others', async () => {
+  it('handles task rejection and continues processing others', async () => {
     const queue = new AsyncQueue(3);
     const tasks = [1, 2, 3, 4, 5].map((num) =>
       queue.enqueue(
