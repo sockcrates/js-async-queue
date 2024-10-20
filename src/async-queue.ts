@@ -21,18 +21,22 @@ export class AsyncQueue {
     options: Options = {},
   ): Promise<void> {
     const { callback } = options;
-    if (this.#workers) {
-      this.#workers -= 1;
-      return task()
-        .then((result) => {
-          callback?.(result);
-        })
-        .finally(() => {
-          this.#workers += 1;
-        });
-    }
-    this.#queue.push({ options, task });
-    return this.#processQueue();
+    return new Promise((resolve) => {
+      if (this.#workers) {
+        this.#workers -= 1;
+        resolve(
+          task()
+            .then((result) => {
+              callback?.(result);
+            })
+            .finally(() => {
+              this.#workers += 1;
+            }),
+        );
+      }
+      this.#queue.push({ options, task });
+      resolve(this.#processQueue());
+    });
   }
   #processQueue(): Promise<void> {
     if (this.#workers) {

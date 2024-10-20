@@ -41,7 +41,7 @@ describe('asyncQueue', () => {
     await Promise.all(tasks.map((task) => queue.enqueue(task)));
     expect(maxConcurrent).toEqual(3);
   });
-  it.skip('executes tasks in the order they were added', () => {
+  it('executes tasks in the order they were added', () => {
     const callback = vi.fn();
     const queue = new AsyncQueue(3);
     const tasks = Array.from({ length: 5 }, (_, index) =>
