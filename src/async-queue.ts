@@ -19,5 +19,10 @@ export class AsyncQueue {
   enqueue<TData>(
     task: TaskFactory<TData>,
     options: Options = {},
-  ): Promise<void> {}
+  ): Promise<void> {
+    const { callback } = options;
+    return task().then((result) => {
+      callback?.(result);
+    });
+  }
 }
