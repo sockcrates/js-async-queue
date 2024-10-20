@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { AsyncQueue } from './async-queue';
 
 describe('an asynchronous task queue in JavaScript', () => {
-  it.skip('processes a task', async () => {
+  it('processes a task', async () => {
     const queue = new AsyncQueue();
     const task = (): Promise<number> => Promise.resolve(1);
     const result = await queue
