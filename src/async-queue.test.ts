@@ -40,19 +40,24 @@ describe('asyncQueue', () => {
     expect(maxConcurrent).toEqual(3);
   });
   it('executes tasks in the order they were added', async () => {
-    const callback = vi.fn();
+    const taskOrder: number[] = [];
     const queue = new AsyncQueue(3);
-    const tasks = Array.from({ length: 5 }, (_, index) =>
-      makeTask(index + 1, (index + 1) * Math.random() * 100),
+    const tasks = Array.from(
+      { length: 10 },
+      (_, index) => () =>
+        new Promise<void>((resolve) => {
+          taskOrder.push(index);
+          setTimeout(() => {
+            resolve();
+          }, Math.random() * 100);
+        }),
     );
     tasks.forEach((task) => {
-      queue.enqueue(task, { callback }).catch((_: unknown) => {
+      queue.enqueue(task).catch((_: unknown) => {
         expect.unreachable();
       });
     });
-    await expect
-      .poll(() => callback.mock.calls.map((call: number[]) => call[0]))
-      .toEqual([1, 2, 3, 4, 5]);
+    await expect.poll(() => taskOrder).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
   });
   it('handles task rejection and continues processing others', async () => {
     const callback = vi.fn();
