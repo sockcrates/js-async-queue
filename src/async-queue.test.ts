@@ -11,16 +11,14 @@ function makeTask<TValue>(value: TValue, timeoutMs: number) {
 }
 
 describe('asyncQueue', () => {
-  it('processes a task', () => {
+  it('processes a task', async () => {
     const callback = vi.fn();
     const queue = new AsyncQueue();
     const task = (): Promise<number> => Promise.resolve(1);
-    queue.enqueue(task).catch((_: unknown) => {
+    queue.enqueue(task, { callback }).catch((_: unknown) => {
       expect.unreachable();
     });
-    expect.poll(() => {
-      expect(callback).toHaveBeenCalledWith(1);
-    });
+    await expect.poll(() => callback).toHaveBeenCalledWith(1);
   });
   it('does not exceed the concurrency limit', async () => {
     const queue = new AsyncQueue(3);
@@ -41,7 +39,7 @@ describe('asyncQueue', () => {
     await Promise.all(tasks.map((task) => queue.enqueue(task)));
     expect(maxConcurrent).toEqual(3);
   });
-  it('executes tasks in the order they were added', () => {
+  it('executes tasks in the order they were added', async () => {
     const callback = vi.fn();
     const queue = new AsyncQueue(3);
     const tasks = Array.from({ length: 5 }, (_, index) =>
@@ -52,13 +50,11 @@ describe('asyncQueue', () => {
         expect.unreachable();
       });
     });
-    expect.poll(() => {
-      expect(callback.mock.calls.map((call: number[]) => call[0])).toEqual([
-        1, 2, 3, 4, 5,
-      ]);
-    });
+    await expect
+      .poll(() => callback.mock.calls.map((call: number[]) => call[0]))
+      .toEqual([1, 2, 3, 4, 5]);
   });
-  it('handles task rejection and continues processing others', () => {
+  it('handles task rejection and continues processing others', async () => {
     const callback = vi.fn();
     const callbackError = vi.fn();
     const queue = new AsyncQueue(3);
@@ -77,11 +73,9 @@ describe('asyncQueue', () => {
         expect.unreachable();
       });
     });
-    expect.poll(() => {
-      expect(callback.mock.calls.map((call: number[]) => call[0])).toEqual([
-        1, 2, 4, 5,
-      ]);
-      expect(callbackError).toHaveBeenCalledWith(3);
-    });
+    await expect
+      .poll(() => callback.mock.calls.map((call: number[]) => call[0]))
+      .toEqual([1, 2, 4, 5]);
+    expect(callbackError).toHaveBeenCalledWith(3);
   });
 });
