@@ -43,7 +43,7 @@ describe('asyncQueue', () => {
     const callback = vi.fn();
     const queue = new AsyncQueue(3);
     const tasks = Array.from({ length: 5 }, (_, index) =>
-      makeTask(index + 1, (index + 1) * 100),
+      makeTask(index + 1, (index + 1) * Math.random() * 100),
     );
     tasks.forEach((task) => {
       queue.enqueue(task, { callback }).catch((_: unknown) => {
