@@ -76,6 +76,6 @@ describe('asyncQueue', () => {
     await expect
       .poll(() => callback.mock.calls.map((call: number[]) => call[0]))
       .toEqual([1, 2, 4, 5]);
-    expect(callbackError).toHaveBeenCalledWith(3);
+    expect(callbackError).toHaveBeenCalledWith(new Error('Task failed'));
   });
 });

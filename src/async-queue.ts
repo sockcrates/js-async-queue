@@ -34,11 +34,13 @@ export class AsyncQueue {
             })
             .finally(() => {
               this.#workers += 1;
-            }),
+            })
+            .then(() => this.#processQueue()),
         );
+      } else {
+        this.#queue.push({ options, task });
+        resolve(this.#processQueue());
       }
-      this.#queue.push({ options, task });
-      resolve(this.#processQueue());
     });
   }
   #processQueue(): Promise<void> {
@@ -57,11 +59,7 @@ export class AsyncQueue {
           .finally(() => {
             this.#workers += 1;
           })
-          .then(() => {
-            if (this.#processQueue.length) {
-              return this.#processQueue();
-            }
-          });
+          .then(() => this.#processQueue());
       }
     }
   }
