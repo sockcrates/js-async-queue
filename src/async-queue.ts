@@ -39,7 +39,7 @@ export class AsyncQueue {
         );
       } else {
         this.#queue.push({ options, task });
-        resolve(this.#processQueue());
+        resolve();
       }
     });
   }
