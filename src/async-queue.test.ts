@@ -1,16 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { AsyncQueue } from './async-queue';
 
-function makeTask<TValue>(value: TValue, timeoutMs: number) {
-  return () =>
-    new Promise<TValue>((resolve) => {
-      setTimeout(() => {
-        resolve(value);
-      }, timeoutMs);
-    });
-}
-
-describe('asyncQueue', () => {
+describe('an asynchronous task queue in JavaScript', () => {
   it('processes a task', async () => {
     const callback = vi.fn();
     const queue = new AsyncQueue();

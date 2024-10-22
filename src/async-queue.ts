@@ -44,23 +44,28 @@ export class AsyncQueue {
     });
   }
   #processQueue(): Promise<void> {
-    if (this.#workers) {
-      const nextRequest = this.#queue.shift();
-      if (nextRequest) {
-        this.#workers -= 1;
-        return nextRequest
-          .task()
-          .then((result) => {
-            nextRequest.options?.callback?.(result);
-          })
-          .catch((error: unknown) => {
-            nextRequest.options?.callbackError?.(error);
-          })
-          .finally(() => {
-            this.#workers += 1;
-          })
-          .then(() => this.#processQueue());
+    return new Promise((resolve) => {
+      if (this.#workers) {
+        const nextRequest = this.#queue.shift();
+        if (nextRequest) {
+          this.#workers -= 1;
+          resolve(
+            nextRequest
+              .task()
+              .then((result) => {
+                nextRequest.options?.callback?.(result);
+              })
+              .catch((error: unknown) => {
+                nextRequest.options?.callbackError?.(error);
+              })
+              .finally(() => {
+                this.#workers += 1;
+              })
+              .then(() => this.#processQueue()),
+          );
+        }
       }
-    }
+      resolve();
+    });
   }
 }
