@@ -1,7 +1,7 @@
-interface Options {
-  callback?: <TData>(result: TData) => void;
-  callbackError?: (error: unknown) => void;
-}
+type Options = Partial<{
+  callback: <TData>(result: TData) => void;
+  callbackError: (error: unknown) => void;
+}>;
 
 type TaskFactory<TData> = () => Promise<TData>;
 
@@ -10,16 +10,13 @@ interface Request<TData> {
   task: TaskFactory<TData>;
 }
 
-export class AsyncQueue {
-  #queue: Request<unknown>[] = [];
+export class AsyncQueue<TData> {
+  #queue: Request<TData>[] = [];
   #workers: number;
   constructor(workers = 3) {
     this.#workers = workers;
   }
-  enqueue<TData>(
-    task: TaskFactory<TData>,
-    options: Options = {},
-  ): Promise<void> {
+  enqueue(task: TaskFactory<TData>, options: Options = {}): Promise<void> {
     const { callback, callbackError } = options;
     return new Promise((resolve) => {
       if (this.#workers) {
