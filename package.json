@@ -19,6 +19,6 @@
   "scripts": {
     "build": "tsc",
     "lint": "eslint",
-    "test": "vitest src"
+    "test": "vitest run src"
   }
 }

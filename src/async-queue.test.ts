@@ -61,7 +61,7 @@ describe('an asynchronous task queue in JavaScript', () => {
     );
     expect(await tasks.pop()).toEqual(5);
     expect(await tasks.pop()).toEqual(4);
-    await expect(tasks.pop()).rejects.toThrowError('Task 3 failed');
+    await expect(tasks.pop()).rejects.toThrow('Task 3 failed');
     expect(await tasks.pop()).toEqual(2);
     expect(await tasks.pop()).toEqual(1);
   });
