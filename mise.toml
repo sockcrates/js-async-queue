@@ -1,6 +1,6 @@
 [tools]
-node = "latest"
-pnpm = "latest"
+node = "26.7.0"
+pnpm = "11.24.0"
 
 [settings]
 lockfile = true

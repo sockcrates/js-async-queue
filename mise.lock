@@ -5,7 +5,7 @@ lockfile_version = 3
 [[tools.node]]
 version = "26.7.0"
 backend = "core:node"
-specifiers = ["latest"]
+specifiers = ["26.7.0"]
 
 [tools.node."platforms.linux-arm64"]
 checksum = "sha256:925aa6157dd37542d0d7f2e28b7bf61e7b39284411210b0498bc3788db4aef68"
@@ -38,7 +38,7 @@ url = "https://nodejs.org/dist/v26.7.0/node-v26.7.0-win-x64.zip"
 [[tools.pnpm]]
 version = "11.24.0"
 backend = "aqua:pnpm/pnpm"
-specifiers = ["latest"]
+specifiers = ["11.24.0"]
 
 [tools.pnpm."platforms.linux-arm64"]
 checksum = "sha256:52f9cd410ef3bbb1cdd79c399b27772fa6d929bc3cf7c80ff3923a81e1c93be3"
